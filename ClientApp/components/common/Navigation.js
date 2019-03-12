@@ -48,13 +48,13 @@ export default withAuth(class Navigation extends React.Component {
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <Link to="/" className="navbar-brand">React App</Link>
+            <Link to="/" className="navbar-brand">Session Submission App</Link>
           </div>
           <div className="navbar-collapse collapse">
             <ul className="nav navbar-nav">
               <li><Link to="/about">About</Link></li>
               <li><Link to="/contact">Contact</Link></li>
-              <li><Link to="/notes">Notes</Link></li>
+              <li><Link to="/sessions">Available Sessions</Link></li>
             </ul>
             {authNav}
           </div>

@@ -12,7 +12,7 @@ import Layout from './components/common/Layout';
 import HomePage from './components/home/HomePage';
 import ContactPage from './components/contact/ContactPage';
 import AboutPage from './components/about/AboutPage';
-import NotesPage from './components/notes/NotesPage';
+import PublicSessionsPage from './components/public-sessions/PublicSessionsPage';
 import SubmissionPage from './components/sessions/SubmissionPage';
 
 const onAuthRequired = ({ history }) => history.push('/login');
@@ -27,12 +27,12 @@ render(
         <Route exact path="/" component={HomePage} />
         <Route path="/contact" component={ContactPage} />
         <Route path="/about" component={AboutPage} />
-        <Route path="/notes" component={NotesPage} />
+        <Route path="/sessions" component={PublicSessionsPage} />
         <Route path="/login" render={() => <LoginPage baseUrl={config.url} />} />
         <Route path="/implicit/callback" component={ImplicitCallback} />
         <Route path="/register" component={RegisterPage} />
         <SecureRoute path="/profile" component={ProfilePage} />
-        <SecureRoute path="/submission" component={SubmissionPage} />
+        <SecureRoute path="/submission/:sessionId?" component={SubmissionPage} />
       </Layout>
     </Security>
   </BrowserRouter>,

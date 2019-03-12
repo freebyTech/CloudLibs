@@ -15,6 +15,7 @@ class SubmissionPage extends React.Component {
     this.handleTitleChange = this.handleTitleChange.bind(this);
     this.handleAbstractChange = this.handleAbstractChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.loadSubmission = this.loadSubmission.bind(this);
   }
 
   handleTitleChange(e) {
@@ -25,9 +26,28 @@ class SubmissionPage extends React.Component {
     this.setState({ abstract: e.target.value });
   }
 
+  async loadSubmission() {
+    fetch(`/api/sessions/${this.props.match.params.sessionId}`, {
+      cache: 'no-cache',
+      headers: {
+        'content-type':'application/json',
+        Authorization: 'Bearer ' + await this.props.auth.getAccessToken()
+      }
+    })
+    .then(rsp => rsp.json())
+    .then(session => {
+      this.setState(Object.assign({}, this.state, session));
+    })
+    .catch(err => {
+      console.error(err);
+    });
+  }
+
   async handleSubmit(e){
     e.preventDefault();
-    fetch('/api/sessions', {
+    var sessionId = this.props.match.params.sessionId;
+    var url = sessionId ? `/api/sessions/${sessionId}` : '/api/sessions';
+    fetch(url, {
       body: JSON.stringify(this.state),
       cache: 'no-cache',
       headers: {
@@ -44,6 +64,12 @@ class SubmissionPage extends React.Component {
     .catch(err => {
       console.error(err);
     });
+  }
+
+  componentDidMount(){
+    if(this.props.match.params.sessionId){
+      this.loadSubmission();
+    }
   }
 
   render(){

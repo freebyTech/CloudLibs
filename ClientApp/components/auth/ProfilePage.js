@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { withAuth } from '@okta/okta-react';
+import SessionListing from '../sessions/SessionListing'
 
 export default withAuth(class ProfilePage extends React.Component {
   constructor(props){
@@ -26,6 +27,7 @@ export default withAuth(class ProfilePage extends React.Component {
       <section className="user-profile">
         <h1>{this.state.user.name}'s Submitted Sessions</h1>
         <Link to="/submission" className="btn btn-primary">Submit A Session</Link>
+        <SessionListing userId={this.state.user.sub} />
       </section>
     )
   }

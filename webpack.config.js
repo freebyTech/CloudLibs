@@ -11,6 +11,7 @@ module.exports = {
     filename: '[name].js',
     publicPath: 'dist/'
   },
+  devtool: 'source-map',
   module: {
     rules: [
       { test: /\.js$/, include: /ClientApp/, use: 'babel-loader' },
