@@ -88,7 +88,7 @@ cd cloud-ops/azure/devops-sandbox-cluster
 
 2) You will be required to log in to your Azure account to gain access to create the proper resources for the cluster:
 
-TODO: Login picture
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/01-AzureLogin.PNG "Azure Login")
 
 3) After execution is complete, the *.secrets* directory and the *terraform* directory will now exist in *devops-sandbox-cluster*, the script will also show you how to connect to the cluster:
 
