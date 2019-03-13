@@ -6,7 +6,7 @@ resource "azurerm_resource_group" "%cluster-name%" {
 resource "azurerm_log_analytics_workspace" "%cluster-name%-law" {
     name                = "${var.log_analytics_workspace_name}"
     location            = "${var.log_analytics_workspace_location}"
-    resource_group_name = "${azurerm_resource_group.k8s.name}"
+    resource_group_name = "${azurerm_resource_group.%cluster-name%.name}"
     sku                 = "${var.log_analytics_workspace_sku}"
 }
 

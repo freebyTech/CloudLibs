@@ -4,7 +4,7 @@ This document outlines the necessary steps to setup the Azure infrastructure for
 
 Under *cloud-ops/azure/devops-sandbox-cluster* you will find everything necessary for building out the following infrastructure in Azure:
 
-* A two node linux cluster of the size Standard_DS1_v2 that is the DevOps cluster of this project (see the next section for general information regarding standard cluster sizes that can be used with these creation scripts). Node count can also be changed easily.
+* A two node linux cluster of the size Standard_DS2_v2 that is the DevOps cluster of this project (see the next section for general information regarding standard cluster sizes that can be used with these creation scripts). Node count can also be changed easily.
 
 Under *cloud-ops/kubernetes/devops-sandbox-cluster* you will find everything necessary for building out the following inside of that kubernetes cluster within Azure:
 
@@ -20,9 +20,7 @@ https://github.com/oktadeveloper/okta-dotnetcore-react-example
 
 VMs are not the only cost related to AKS in Azure, dynamic disks and container insights logging also represent important pricing factors, but here is a breakdown of pricing per VM for standard kubernetes cluster sizes.
 
-The following prices and sizes are based off of quotes from March of 2019, more information and different cluster types can be viewed here:
-
-https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/
+The following prices and sizes are based off of quotes from March of 2019, more information and different VM types can be viewed on Microsoft's website at https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/.
 
 | Size              | vCPU | Mem | Temp Storage (SSD) | Max Disks* | Monthly Cost East US  | 1 year reserved | 3 year reserved |
 |-------------------|------|-----|--------------------|------------|-----------------------|-----------------|-----------------|
@@ -37,20 +35,79 @@ https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/
 | Standard_B8ms	    | 8    | 32  | 64                 | 16         | ~$243.09/month | ~$142.1675/month (~42%) | ~$91.469/month (~62%) |
 | Standard_D8s_v3   | 8    | 32  | 64                 | 16         | ~$280.32/month | ~$167.17/month (~40%)  | ~$107.5801/month (~62%) |
 | Standard_DS4_v2	| 8	   | 28  | 56                 | 32         | ~$427.05/month | ~$181.0035/month (~58%) | ~$117.3329/month (~73%) |
-| Standard_DS5_v2	| 16   | 56  | 112                | 64         | ~$854.10/month | ~$361.9997/month (~58%) | ~$234.6658/month (~73%) |
 | Standard_D16s_v3  | 16   | 64  | 128                | 32         | ~$560.64/month | ~$334.3327/month (~40%) |  ~$215.1967/month (~62%) |
+| Standard_DS5_v2	| 16   | 56  | 112                | 64         | ~$854.10/month | ~$361.9997/month (~58%) | ~$234.6658/month (~73%) |
 | Standard_D32s_v3  | 32   | 128 | 256                | 32         | ~$1,121.28/month | ~$668.6654/month (~40%) | ~$430.3861/month (~62%) |
 | Standard_D64s_v3  | 64   | 256 | 512                | 32         | ~$2,242.56/month | ~$1,337.3308/month (~40%) | ~$860.7795/month (~62%) |
 
 *The number disks allowed per node is the maximum amount of storage containers that a cluster can support per node.
 
-## Step 1, Azure Cloud Infrastructure 
+# Workstation Setup
 
-The cloud infrastructure can be setup by running the following command:
+The latest Azure PowerShell module is required for compatibility with the powershell modules defined in this repository, that requires PowerShell 5 and the .NET framework 4.7.2 to be installed on the development workstation. For more information you can view the microsoft documentation at https://docs.microsoft.com/en-us/powershell/azure/install-az-ps?view=azps-1.5.0.
+
+You will know you don't have it installed if your recieve this error:
 
 ```powershell
-cd cloud-aps/azure/devops-sandbox-cluster
-01-Setup-ClusterEnvironment.ps1
+The specified module 'Az.Accounts' was not loaded because no valid module file was found in any module directory.
+At C:\dev\screening\okta-dotnetcore-react-example\cloud-ops\azure\common\ps-modules\New-ServicePrinciple.psm1:4 char:1
++ Import-Module Az.Accounts
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+```
+
+If other prerequisites are installed this command should work to install it:
+
+```powershell
+Install-Module -Name Az -AllowClobber -Scope CurrentUser
+```
+
+Terraform is also required, here is an excerpt of its installation procedure from https://github.com/freebyTech/Bootstrapping/blob/develop/WorkstationSetup/Win10-Pro/ContainerWorkstationSetup.ps1
+
+```powershell
+$env:TERRAFORM_VERSION = '0.11.11'
+$env:TERRAFORM_FULL_NAME = "terraform_${env:TERRAFORM_VERSION}_windows_amd64"
+
+# Install HashiCorp Terraform Support
+$terraformUrl = "https://releases.hashicorp.com/terraform/${env:TERRAFORM_VERSION}/${env:TERRAFORM_FULL_NAME}.zip"
+Write-Host "Downloading and installing terraform from $terraformUrl"
+Invoke-WebRequest $terraformUrl -OutFile /build/terraform.zip -UseBasicParsing;
+Expand-Archive /build/terraform.zip -DestinationPath /build/terraform-tmp;
+Move-Item /build/terraform-tmp ${env:ProgramFiles}/terraform;
+Remove-Item -Force /build/terraform.zip;
+[Environment]::SetEnvironmentVariable('path', $($Env:PATH + ';' + $Env:ProgramFiles + '\terraform'), 'Machine')
+```
+
+## Step 1, Setup Azure Cloud Infrastructure 
+
+1) The cloud infrastructure can be setup by running the following command:
+
+```powershell
+cd cloud-ops/azure/devops-sandbox-cluster
+. ./01-Setup-ClusterEnvironment.ps1
+```
+
+2) You will be required to log in to your Azure account to gain access to create the proper resources for the cluster:
+
+TODO: Login picture
+
+3) After execution is complete, the *.secrets* directory and the *terraform* directory will now exist in *devops-sandbox-cluster*, the script will also show you how to connect to the cluster:
+
+```bash
+You will need to run the following to attach to the new cluster in bash:
+
+cd /c/dev/screening/okta-dotnetcore-react-example/cloud-ops/azure/devops-sandbox-cluster
+. init-kube-connection.sh
+
+You can optionally install helm locally by running this:
+
+. $COMMON_BASH_FILES_PATH/install-helm-locally.sh
+
+To run the dashboard you can run this:
+
+kubectl proxy
+
+And go to:
+http://localhost:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/#!/overview?namespace=default
 ```
 
 ## LICENSE
