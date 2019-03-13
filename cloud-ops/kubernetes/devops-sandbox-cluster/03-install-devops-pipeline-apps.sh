@@ -40,7 +40,7 @@ git clone https://github.com/goharbor/harbor-helm harbor-helm
 cd ./harbor-helm
 
 # Commits from 11-21-2018 broke persistence, need to investigate values.yaml changes in future.
-git checkout ebb8d025f269ebced5821d40bffcce4052758246
+git checkout -b 1.0.0 origin/1.0.0
 
 helm dependency update
 helm upgrade --install --namespace build harbor -f ../Deployment/harbor-helm-values.yaml .
