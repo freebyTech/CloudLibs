@@ -90,7 +90,7 @@ cd cloud-ops/azure/devops-sandbox-cluster
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/01-AzureLogin.PNG "Azure Login")
 
-3) After execution is complete, the *.secrets* directory and the *terraform* directory will now exist in *devops-sandbox-cluster*, the script will also show you how to connect to the cluster:
+3) After execution is complete, the *.secrets* directory and the *terraform* directory will now exist in *devops-sandbox-cluster*, the script will also show you how to connect to the cluster and run kubectl:
 
 ```bash
 You will need to run the following to attach to the new cluster in bash:
@@ -109,6 +109,23 @@ kubectl proxy
 And go to:
 http://localhost:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy/#!/overview?namespace=default
 ```
+
+# Setup Kubernetes Cluster Environment
+
+1) The kubernetes environment can be setup by running the following command:
+
+```powershell
+cd cloud-ops/kubernetes/devops-sandbox-cluster
+. ./02-setup-kubernetesenvironment.sh
+```
+
+2) nginx-ingress, cert-manager, the local harbor instance, and the local jenkins instance can all be setup by running the following command:
+
+```powershell
+cd cloud-ops/kubernetes/devops-sandbox-cluster
+. ./03-install-devops-pipeline-apps.sh
+```
+
 
 ## LICENSE
 
