@@ -61,7 +61,7 @@ If other prerequisites are installed this command should work to install it:
 Install-Module -Name Az -AllowClobber -Scope CurrentUser
 ```
 
-Terraform is also required, here is an excerpt of its installation procedure from https://github.com/freebyTech/Bootstrapping/blob/develop/WorkstationSetup/Win10-Pro/ContainerWorkstationSetup.ps1
+Terraform is also required, here is an excerpt of its installation procedure from https://github.com/freebyTech/Bootstrapping/blob/develop/WorkstationSetup/Win10-Pro/ContainerWorkstationSetup.ps1:
 
 ```powershell
 $env:TERRAFORM_VERSION = '0.11.11'
@@ -77,7 +77,7 @@ Remove-Item -Force /build/terraform.zip;
 [Environment]::SetEnvironmentVariable('path', $($Env:PATH + ';' + $Env:ProgramFiles + '\terraform'), 'Machine')
 ```
 
-## Step 1, Setup Azure Cloud Infrastructure 
+# Setup Azure Cloud Infrastructure 
 
 1) The cloud infrastructure can be setup by running the following command:
 
