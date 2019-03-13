@@ -43,8 +43,8 @@ cd ./harbor-helm
 git checkout -b 1.0.0 origin/1.0.0
 
 helm dependency update
-helm upgrade --install --namespace build harbor -f ../Deployment/harbor-helm-values.yaml .
+helm upgrade --install --namespace build harbor -f ../Deployment/harbor-helm-values.yaml --override Master.AdminUser=$JENKINS_ADMIN_USER --override Master.AdminPassword=$JENKINS_ADMIN_USER_PASSWORD .
 
 cd ..
-helm upgrade --install --namespace build freeby-jenkins -f ./Deployment/freeby-jenkins-values.yaml stable/jenkins
+helm upgrade --install --namespace build freeby-jenkins -f ./Deployment/freeby-jenkins-values.yaml --override harborAdminPassword=$HARBOR_ADMIN_USER_PASSWORD --override secretKey=$HARBOR_SECRET_KEY --override database.internal.password=$HARBOR_ADMIN_USER_PASSWORD stable/jenkins
 
