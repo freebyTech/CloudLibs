@@ -11,10 +11,11 @@ Under *cloud-ops/kubernetes/devops-sandbox-cluster* you will find everything nec
 * A publicly accessible but secured harbor instance that houses docker images and helm charts for this devops sandbox. That instance is accessible at https://sandboxregistry.freebytech.com.
 * A publicly accessible but secured jenkins instance that builds the application found in this sandbox repository. That instance is accessible at https://sandboxbuilds.freebytech.com.
 
-This kubernetes cluster also tests and is the release environment for the test application contained in *src* and whose helm chart is located under *deploy*, it is accessible at https://sandboxapp.freebytech.com. The application in this repository was originally based off of the React / .NET Core Okta test application found at:
+This kubernetes cluster also tests and is the release environment for the test application contained in *src* and whose helm chart is located under *deploy*, it is accessible at https://sandboxapp.freebytech.com. The application under *src* in this repository was originally based off of the React / .NET Core Okta test application found at:
 
 https://github.com/oktadeveloper/okta-dotnetcore-react-example
 
+That application's source is governed by the Apache 2.0 license, see its repository for more inforrmation.
 
 # Azure VM Pricing
 
@@ -125,8 +126,3 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 cd cloud-ops/kubernetes/devops-sandbox-cluster
 . ./03-install-devops-pipeline-apps.sh
 ```
-
-
-## LICENSE
-
-Apache 2.0, see [LICENSE](LICENSE)
