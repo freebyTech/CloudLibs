@@ -145,9 +145,11 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/04-SetupPublicProject.PNG "Setup Public Project for freebyJenkinsAgent")
 
-6) Once harbor is setup, you can start to create builds and publish the resulting docker images and helm charts to your sandbox harbor regisstry if you build out your Jekinsfiles using the commands found in our Open Source freebyJenkinsLibrary Groovy build operations. The first build you *absolutely need* to setup is the freebyTech freebyAgent docker image.
+6) Once harbor is setup, you can start to create builds and publish the resulting docker images and helm charts to your sandbox harbor regisstry if you build out your Jekinsfiles using the commands found in our Open Source freebyJenkinsLibrary Groovy build operations. That library can be found here: 
 
-Without that image you will not be able to run the special commands necessary for cluster publish operations supported by our Open Source freebyJenkinsLibrary Groovy build operations for builds and publication. Here are screen shots depicting that setup and the results of the first build:
+https://github.com/freebyTech/freebyJenkinsLibrary
+
+7) The first build you *absolutely need* to setup is the freebyTech freebyAgent docker image. Without that image you will not be able to run the special commands necessary for cluster publish operations supported by our Open Source freebyJenkinsLibrary Groovy build operations for builds and publication. Here are screen shots depicting that setup and the results of the first build:
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/05-CreateTheAgentBuild.PNG "Build Screen 1")
 
