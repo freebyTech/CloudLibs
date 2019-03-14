@@ -5,7 +5,7 @@
 replicaCount: 1
 
 image:
-  repository: registrysandbox.freebytech.com/freebytech/fbt-web-sandboxapp
+  repository: sandboxregistry.freebytech.com/freebytech/fbt-web-sandboxapp
   tag: "latest"
   pullPolicy: Always
   imagePullSecrets: "freebytech-regcred"
