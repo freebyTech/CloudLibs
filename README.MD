@@ -118,21 +118,21 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 . ./02-setup-kubernetes-environment.sh
 ```
 
-2) Then, the nginx-ingress, cert-manager, local harbor service instances, and the local jenkins instance can all be setup by running the following command:
+2) Then, the nginx-ingress, ace protocol cert-manager, local harbor service instances, and the local jenkins instance can all be setup by running the following command:
 
 ```powershell
 . ./03-install-devops-pipeline-apps.sh
 ```
 
-3) Once these commands are run you can use `kubectl proxy` to verify the status of your build environment insdie the cluster, you will need to wait a few minutes to allow the containers to all come up as harbor is actually several processes that need to provision their own dynamic volumes:
+3) Once these commands are run you can use `kubectl proxy` to verify the status of your build environment inside the cluster, you will need to wait a few minutes to allow the containers to all come up as harbor is actually several processes that need to provision their own dynamic volumes:
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/02b-VerifyBuildEnvironmentStatus.PNG "Kubernetes Status")
 
-4) Harbor needs a couple of manual things setup as the harbor helm chart does not support automated setup of initial users (beyond the base admin user) and projects. Here are screen shots depicting our playground setup:
+4) Harbor needs a couple of manual things setup as the harbor helm chart does not support automated setup of initial users (beyond the base admin user) and projects. Here are screen shots depicting our playground harbor setup:
 
-![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/05-CreateTheAgentBuild.PNG "Setup Harbor Publisher")
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/03-SetupHarborPublisher.PNG "Setup Harbor Publisher")
 
-![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/05-CreateTheAgentBuild.PNG "Setup Public Project")
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/04-SetupPublicProject.PNG "Setup Public Project")
 
 5) Once harbor is setup, you can start to create builds and publish the resulting docker images and helm charts to harbor. The first build you *absolutely need* to setup is the freebyTech freebyAgent docker image to publish to your repository. Without that image you will not be able to run the special commands necessary for cluster publish operations supported by our Open Source Jenkins library for builds and publication. Here are screen shots depicting that setup and the results of the first build:
 
