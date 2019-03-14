@@ -92,7 +92,7 @@ persistence:
   enabled: true
   # Setting it to "keep" to avoid removing PVCs during a helm delete 
   # operation. Leaving it empty will delete PVCs after the chart deleted
-  resourcePolicy: "keep"
+  resourcePolicy: ""
   persistentVolumeClaim:
     registry:
       # Use the existing PVC which must be created manually before bound
@@ -103,15 +103,15 @@ persistence:
       storageClass: "managed-premium"
       subPath: ""
       accessMode: ReadWriteOnce
-      size: 64Gi
+      size: 10Gi
     chartmuseum:
-      existingClaim: "default"
-      storageClass: ""
+      existingClaim: ""
+      storageClass: "managed-premium"
       subPath: ""
       accessMode: ReadWriteOnce
       size: 10Gi
     jobservice:
-      existingClaim: "default"
+      existingClaim: ""
       storageClass: ""
       subPath: ""
       accessMode: ReadWriteOnce
@@ -119,7 +119,7 @@ persistence:
     # If external database is used, the following settings for database will 
     # be ignored
     database:
-      existingClaim: "default"
+      existingClaim: ""
       storageClass: ""
       subPath: ""
       accessMode: ReadWriteOnce
@@ -127,7 +127,7 @@ persistence:
     # If external Redis is used, the following settings for Redis will 
     # be ignored
     redis:
-      existingClaim: "default"
+      existingClaim: ""
       storageClass: ""
       subPath: ""
       accessMode: ReadWriteOnce

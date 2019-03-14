@@ -84,7 +84,7 @@ Remove-Item -Force /build/terraform.zip;
 
 ```powershell
 cd cloud-ops/azure/devops-sandbox-cluster
-. ./01-Setup-ClusterEnvironment.ps1
+. ./01-Setup-ClusterAndSqlServerEnvironment.ps1
 ```
 
 2) You will be required to log in to your Azure account to gain access to create the proper resources for the cluster:
@@ -117,7 +117,7 @@ http://localhost:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboar
 
 ```powershell
 cd cloud-ops/kubernetes/devops-sandbox-cluster
-. ./02-setup-kubernetesenvironment.sh
+. ./02-setup-kubernetes-environment.sh
 ```
 
 2) nginx-ingress, cert-manager, the local harbor instance, and the local jenkins instance can all be setup by running the following command:

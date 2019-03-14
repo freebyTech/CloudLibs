@@ -7,6 +7,7 @@ class NewClusterInfo {
     [string] $ResourceGroupName
     [string] $StorageAccountName
     [string] $TerraformStateContainerName
+    [string] $SecretsPath
 }
 
 $commandPath = Split-Path -parent $PSCommandPath
@@ -64,6 +65,7 @@ function New-ClusterByTerraform
         $clusterInfo.ResourceGroupName = "$ClusterName-resgrp"
         $clusterInfo.StorageAccountName = "${ClusterName}storeacct"
         $clusterInfo.TerraformStateContainerName = "$ClusterName-tfstate"
+        $clusterInfo.SecretsPath = $secretsPath
 
         # Create secrets directory if it doesn't already exist.
         New-DirectoryWithTest -Path $secretsPath | Write-Host

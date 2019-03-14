@@ -15,7 +15,8 @@ export ORIG_DIR=$(pwd)
 cd $ORIG_DIR
 
 # Set necessary secrets as environment variables.
-. ./.secrets/set-user-environment-variables.sh
+. ../../azure/devops-sandbox-cluster/.secrets/set-sql-server-environment-variables.sh
+. ./.secrets/set-external-resources-environment-variables.sh
 
 # NAMESPACES
 # Create namespace build for jenkins and harbor.
@@ -64,7 +65,7 @@ kubectl create secret generic jenkins-credentials -n build --from-file ./.secret
 # Create the master.key and hudson.util.Secret files secret.
 kubectl create secret generic jenkins-secrets -n build --from-file ./.secrets/jenkins/hudson.util.Secret --from-file ./.secrets/jenkins/master.key
 
-# Setup standard secrets for use by multiple apps.
+# Setup external resource secrets for use by jenkins and potentially others.
 kubectl create secret generic jenkins-env-secrets -n build \
     --from-literal=addenv_REGISTRY_URL=$REGISTRY_URL \
     --from-literal=addenv_REGISTRY_USER_ID=$REGISTRY_USER_ID \
@@ -74,3 +75,18 @@ kubectl create secret generic jenkins-env-secrets -n build \
     --from-literal=addenv_PUBLIC_GIT_REPO_USER_ID=$PUBLIC_GIT_REPO_USER_ID \
     --from-literal=addenv_NUGET_API_KEY=$NUGET_API_KEY \
     --from-literal=addenv_AGENT_IMAGE=jenkins-agent:latest
+
+# Setup standard mail secrets for use by multiple apps.
+kubectl create secret generic smtp-env-secrets -n production \
+    --from-literal=MAIL__SMTPSERVER=$MAIL__SMTPSERVER \
+    --from-literal=MAIL__SMTPPORT=$MAIL__SMTPPORT \
+    --from-literal=MAIL__SMTPUSERNAME=$MAIL__SMTPUSERNAME \
+    --from-literal=MAIL__SMTPPASSWORD=$MAIL__SMTPPASSWORD \
+    --from-literal=MAIL__SMTPENABLESSL=$MAIL__SMTPENABLESSL
+
+# Setup standard db secrets for use by multiple apps.
+kubectl create secret generic db-env-secrets -n production \
+    --from-literal=DB__SERVERNAME=$AZURE_SQL_SERVER \
+    --from-literal=DB__USERNAME=$AZURE_SQL_SERVER_ADMIN_USER \
+    --from-literal=DB__USERPASSWORD=$AZURE_SQL_SERVER_ADMIN_PASSWORD
+

@@ -23,13 +23,15 @@ sleep 30s
 cd $ORIG_DIR
 
 # Set necessary secrets as environment variables.
-. ./.secrets/set-user-environment-variables.sh
+. ../../azure/devops-sandbox-cluster/.secrets/set-sql-server-environment-variables.sh
+. ./.secrets/set-external-resources-environment-variables.sh
 
 # Need to wait till tiller is available.
 helm install stable/nginx-ingress --name nginx-ingress --namespace kube-system --set controller.hostNetwork=true --set controller.kind=DaemonSet
 helm install stable/cert-manager --name cert-manager --namespace kube-system --set ingressShim.defaultIssuerName=letsencrypt-staging-clusteri --set ingressShim.defaultIssuerKind=ClusterIssuer
 
-kubectl create -f $COMMON_FILES_PATH/k8s-resources/ClusterIssuer/letsencrypt-production.yaml
+kubectl create -f ../common/ClusterIssuer/letsencrypt-staging.yaml
+kubectl create -f ../common/ClusterIssuer/letsencrypt-production.yaml
 
 # Create a network tester for testing the internal network of the cluster.
 kubectl create -f ../common/Deployment/busyBoxTester.yaml
@@ -43,8 +45,11 @@ cd ./harbor-helm
 git checkout -b 1.0.0 origin/1.0.0
 
 helm dependency update
-helm upgrade --install --namespace build harbor -f ../Deployment/harbor-helm-values.yaml --override Master.AdminUser=$JENKINS_ADMIN_USER --override Master.AdminPassword=$JENKINS_ADMIN_USER_PASSWORD .
+helm upgrade --install --namespace build harbor -f ../Deployment/harbor-helm-values.yaml --set harborAdminPassword=$HARBOR_ADMIN_USER_PASSWORD --set secretKey=$HARBOR_SECRET_KEY --set database.internal.password=$HARBOR_ADMIN_USER_PASSWORD .
+
+echo 'Sleeping for 30 seconds'
+sleep 30s
 
 cd ..
-helm upgrade --install --namespace build freeby-jenkins -f ./Deployment/freeby-jenkins-values.yaml --override harborAdminPassword=$HARBOR_ADMIN_USER_PASSWORD --override secretKey=$HARBOR_SECRET_KEY --override database.internal.password=$HARBOR_ADMIN_USER_PASSWORD stable/jenkins
+helm upgrade --install --namespace build freeby-jenkins -f ./Deployment/freeby-jenkins-values.yaml --set Master.AdminUser=$JENKINS_ADMIN_USER --set Master.AdminPassword=$JENKINS_ADMIN_USER_PASSWORD stable/jenkins
 

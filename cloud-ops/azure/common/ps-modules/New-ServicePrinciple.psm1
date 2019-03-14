@@ -61,7 +61,7 @@ function New-ServicePrinciple
         $envVarLoadScript = "${SecretsPath}\Load-Envs-${ServicePrincipleName}.ps1"
         $subject = "${ServicePrincipleName} Cert"
 
-        # If Cert doesn't exist then we haven't created this service principle, if it does then we have already 
+        # If env vars load file doesn't exist then we haven't created this service principle, if it does then we have already 
         if (!(Test-Path $envVarLoadScript)) {
             Connect-AzAccount
 
