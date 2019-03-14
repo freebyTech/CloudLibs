@@ -43,7 +43,7 @@ The following prices and sizes are based off of quotes from March of 2019 from t
 | Standard_D32s_v3  | 32   | 128 | 256                | 32         | ~$1,121.28/month | ~$668.6654/month (~40%) | ~$430.3861/month (~62%) |
 | Standard_D64s_v3  | 64   | 256 | 512                | 32         | ~$2,242.56/month | ~$1,337.3308/month (~40%) | ~$860.7795/month (~62%) |
 
-*The number disks allowed per node is the maximum amount of storage containers that a cluster can support per node.
+*The number disks allowed per node is the maximum amount of dynamic or persistent volumes that a cluster can support per node.
 
 # Workstation Setup
 
@@ -124,4 +124,24 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 . ./03-install-devops-pipeline-apps.sh
 ```
 
-3) 
+3) Once these commands are run you can use `kubectl proxy` to verify the status of your build environment insdie the cluster, you will need to wait a few minutes to allow the containers to all come up as harbor is actually several processes that need to provision their own dynamic volumes:
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/02b-VerifyBuildEnvironmentStatus.PNG "Kubernetes Status")
+
+4) Harbor needs a couple of manual things setup as the harbor helm chart does not support automated setup of initial users (beyond the base admin user) and projects. Here are screen shots depicting our playground setup:
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/05-CreateTheAgentBuild.PNG "Setup Harbor Publisher")
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/05-CreateTheAgentBuild.PNG "Setup Public Project")
+
+5) Once harbor is setup, you can start to create builds and publish the resulting docker images and helm charts to harbor. The first build you *absolutely need* to setup is the freebyTech freebyAgent docker image to publish to your repository. Without that image you will not be able to run the special commands necessary for cluster publish operations supported by our Open Source Jenkins library for builds and publication. Here are screen shots depicting that setup and the results of the first build:
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/05-CreateTheAgentBuild.PNG "Build Screen 1")
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/06-AgentBuildSettings.PNG "Build Screen 2")
+
+6) Once the build is setup the server will automatically build the image and publish it to the playground registry:
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/07-AgentBuildItself.PNG "Successful Build")
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/08-PublishToHarbor.PNG "Successful Publish")
