@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using okta_dotnetcore_react_example.Data;
+using okta_dotnetcore_react_example.Options;
 
 namespace okta_dotnetcore_react_example
 {
@@ -32,12 +34,20 @@ namespace okta_dotnetcore_react_example
             })
             .AddJwtBearer(options =>
             {
+                // TODO: Really need to come from environment variables like mail and DB, to be twelve-factor.
                 options.Authority = "https://dev-541900.okta.com/oauth2/default";
                 options.Audience = "api://default";
             });
             services.AddMvc();
-            services.AddDbContext<ApiContext>(options => options.UseInMemoryDatabase("ConferenceDb"));
 
+            // Build out DB Connection string.
+            services.Configure<DbOptions>(Configuration.GetSection("DB"));
+
+            var sp = services.BuildServiceProvider();
+            var dbOptions = sp.GetService<IOptions<DbOptions>>();
+
+            var dbConnectionString = DbOptions.BuildConnectionString(dbOptions.Value.ServerName, dbOptions.Value.UserName, dbOptions.Value.UserPassword, "ConferenceDb");
+            services.AddDbContext<ApiContext>(options => options.UseSqlServer(dbConnectionString));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

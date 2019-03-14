@@ -21,7 +21,7 @@ That application's source is governed by the Apache 2.0 license, see its reposit
 
 # Azure VM Pricing
 
-VMs are not the only cost related to AKS in Azure, SQL Server instances, dynamic disks and container insights logging also represent important pricing factors, but here is a breakdown of pricing per VM for standard kubernetes cluster sizes.
+VMs are not the only cost related to AKS in Azure, SQL Server instances, dynamically provisioned volumes for kubernetes services, and Application and Container Insights logging also represent important pricing factors, but here is a breakdown of pricing per VM for standard kubernetes cluster sizes as that represents one of the largest factors.
 
 The following prices and sizes are based off of quotes from March of 2019 from the East US region, more information and different VM types can be viewed on Microsoft's website at https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/.
 

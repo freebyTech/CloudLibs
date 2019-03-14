@@ -19,4 +19,4 @@ New-StorageContainer -ResourceGroupName $newClusterInfo.ResourceGroupName -Stora
 New-SqlServerAndAdminUser  -ResourceGroupName $newClusterInfo.ResourceGroupName -SecretsPath $newClusterInfo.SecretsPath -ServerBaseName 'devopssql' -SqlAdminName 'SqlAdmin' -Location 'Central US'
 
 # Create the DB for the test application.
-New-SqlServerDb  -ResourceGroupName $newClusterInfo.ResourceGroupName -ServerName $env:AZURE_SQL_SERVER -DbName 'SessionsDb'
+New-SqlServerDb  -ResourceGroupName $newClusterInfo.ResourceGroupName -ServerName $env:AZURE_SQL_SERVER -DbName 'ConferenceDb'
