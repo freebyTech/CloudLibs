@@ -62,7 +62,7 @@ function New-ClusterByTerraform {
         $clusterInfo.ClusterName = $ClusterName
         $clusterInfo.ServicePrincipleName = "$ClusterName-servp"
         $clusterInfo.ResourceGroupName = "$ClusterName-resgrp"
-        $clusterInfo.StorageAccountName = "${ClusterName}storeacct".Replace("-". "")
+        $clusterInfo.StorageAccountName = "${ClusterName}storeacct" -Replace '-', ''
         $clusterInfo.TerraformStateContainerName = "$ClusterName-tfstate"
         $clusterInfo.SecretsPath = $secretsPath
 

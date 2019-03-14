@@ -111,16 +111,17 @@ http://localhost:8001/api/v1/namespaces/kube-system/services/kubernetes-dashboar
 
 # Setup Kubernetes Cluster Environment
 
-1) The kubernetes environment can be setup by running the following command:
+1) The kubernetes environment can be setup by running the following command starting at the base of this repository:
 
 ```powershell
 cd cloud-ops/kubernetes/devops-sandbox-cluster
 . ./02-setup-kubernetes-environment.sh
 ```
 
-2) The nginx-ingress, cert-manager, local harbor instances, and the local jenkins instance can all be setup by running the following command:
+2) Then, the nginx-ingress, cert-manager, local harbor service instances, and the local jenkins instance can all be setup by running the following command:
 
 ```powershell
-cd cloud-ops/kubernetes/devops-sandbox-cluster
 . ./03-install-devops-pipeline-apps.sh
 ```
+
+3) 
