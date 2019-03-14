@@ -130,11 +130,13 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 
 4) Harbor needs a couple of manual things setup as the harbor helm chart does not support automated setup of initial users (beyond the base admin user) and projects. Here are screen shots depicting our playground harbor setup:
 
-![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/03-SetupHarborPublisher.PNG "Setup Harbor Publisher")
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/03-SetupHarborPublisher.PNG "Setup Jenkins Publishing Agent User")
 
-![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/04-SetupPublicProject.PNG "Setup Public Project")
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/04-SetupPublicProject.PNG "Setup Public Project for freebyJenkinsAgent")
 
-5) Once harbor is setup, you can start to create builds and publish the resulting docker images and helm charts to harbor. The first build you *absolutely need* to setup is the freebyTech freebyAgent docker image to publish to your repository. Without that image you will not be able to run the special commands necessary for cluster publish operations supported by our Open Source Jenkins library for builds and publication. Here are screen shots depicting that setup and the results of the first build:
+5) Once harbor is setup, you can start to create builds and publish the resulting docker images and helm charts to your sandbox harbor regisstry if you build out your Jekinsfiles using the commands found in our Open Source freebyJenkinsLibrary Groovy build operations. The first build you *absolutely need* to setup is the freebyTech freebyAgent docker image.
+
+Without that image you will not be able to run the special commands necessary for cluster publish operations supported by our Open Source freebyJenkinsLibrary Groovy build operations for builds and publication. Here are screen shots depicting that setup and the results of the first build:
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/05-CreateTheAgentBuild.PNG "Build Screen 1")
 
