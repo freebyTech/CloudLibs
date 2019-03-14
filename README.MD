@@ -128,9 +128,11 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/02b-VerifyBuildEnvironmentStatus.PNG "Kubernetes Status")
 
-4) cert-manager also needs to interact with letesencrypt to setup the proper automated certificates for your websites. This means at least two things:
-    A) You will need to verify in Azure what your cluster's load balancing IP address is.
-    B) Any domains that you want to be serviced by your cluster you will have to point to the IP address of your kubernetes load balancer. We did this for our example domains:
+4) cert-manager also needs to interact with Let's Encrypt to setup the proper certificates for your websites in an automated way. This means at least two things:
+
+    * You will need to verify in Azure what your cluster's load balancing IP address is.
+    * Any domains that you want to be serviced by your cluster you will have to point to the IP address of your kubernetes load balancer. We did this for our example domains:
+    
         https://sandboxregistry.freebytech.com
         https://sandboxbuilds.freebytech.com
         https://sandboxapp.freebytech.com
