@@ -118,7 +118,7 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 . ./02-setup-kubernetes-environment.sh
 ```
 
-2) Then, the nginx-ingress, ace protocol cert-manager, local harbor service instances, and the local jenkins instance can all be setup by running the following command:
+2) Then, the nginx-ingress, acme protocol cert-manager, local harbor service instances, and the local jenkins instance can all be setup by running the following command:
 
 ```powershell
 . ./03-install-devops-pipeline-apps.sh
@@ -128,13 +128,24 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/02b-VerifyBuildEnvironmentStatus.PNG "Kubernetes Status")
 
-4) Harbor needs a couple of manual things setup as the harbor helm chart does not support automated setup of initial users (beyond the base admin user) and projects. Here are screen shots depicting our playground harbor setup:
+4) cert-manager also needs to interact with letesencrypt to setup the proper automated certificates for your websites. This means at least two things:
+    A) You will need to verify in Azure what your cluster's load balancing IP address is.
+    B) Any domains that you want to be serviced by your cluster you will have to point to the IP address of your kubernetes load balancer. We did this for our example domains:
+        https://sandboxregistry.freebytech.com
+        https://sandboxbuilds.freebytech.com
+        https://sandboxapp.freebytech.com
+
+6) Once that is setup you can access your harbor and jenkins instances (and soon your sandbox application). You may receive a certificate error the first time you try to access a site as the Let's Encrypt certificate creation may not have finished yet. But once that is finished you will have valid certs automatically created for you like these:
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/09-LetsEncryptCert.PNG "freebyTech Cert from Let's Encrypt Authority")
+
+5) Harbor needs a couple of manual things setup as the harbor helm chart does not support automated setup of initial users (beyond the base admin user) and projects. Here are screen shots depicting our playground harbor setup:
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/03-SetupHarborPublisher.PNG "Setup Jenkins Publishing Agent User")
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/04-SetupPublicProject.PNG "Setup Public Project for freebyJenkinsAgent")
 
-5) Once harbor is setup, you can start to create builds and publish the resulting docker images and helm charts to your sandbox harbor regisstry if you build out your Jekinsfiles using the commands found in our Open Source freebyJenkinsLibrary Groovy build operations. The first build you *absolutely need* to setup is the freebyTech freebyAgent docker image.
+6) Once harbor is setup, you can start to create builds and publish the resulting docker images and helm charts to your sandbox harbor regisstry if you build out your Jekinsfiles using the commands found in our Open Source freebyJenkinsLibrary Groovy build operations. The first build you *absolutely need* to setup is the freebyTech freebyAgent docker image.
 
 Without that image you will not be able to run the special commands necessary for cluster publish operations supported by our Open Source freebyJenkinsLibrary Groovy build operations for builds and publication. Here are screen shots depicting that setup and the results of the first build:
 
@@ -142,7 +153,7 @@ Without that image you will not be able to run the special commands necessary fo
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/06-AgentBuildSettings.PNG "Build Screen 2")
 
-6) Once the build is setup the server will automatically build the image and publish it to the playground registry:
+7) Once the build is setup the server will automatically build the image and publish it to the playground registry:
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/07-AgentBuildItself.PNG "Successful Build")
 
