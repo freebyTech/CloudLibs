@@ -24,44 +24,45 @@ Import-Module freebyTech.Common
         If it does exist the function will assume the resources were already created and the user merely 
         wants the environment variables to be loaded related to the storage container.
 #>
-function New-SqlServerAndAdminUser
-{
+function New-SqlServerAndAdminUser {
     Param(
-        # The resource group for the SQL Server, this resource group should already exist.
-	    [Parameter(Mandatory=$True)]
+        # The resource group for the SQL Server, this resource group will also be created.
+        [Parameter(Mandatory = $True)]
         [string]$ResourceGroupName,
 
         # The path where all secrets for this creation operation should be placed.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$SecretsPath,
 
         # The name for the storage account.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$ServerBaseName,
 
         # The name for first administrative user for the SQL Server.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$SqlAdminName,
 
         # The location for the SQL Server.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$Location,
 
         # The starting IP address range allowed through the firewall, an IP Address range 0.0.0.0 to 0.0.0.0 means only azure based connections are allowed.
-	    [Parameter(Mandatory=$False)]
-        [string]$StartIp="0.0.0.0",
+        [Parameter(Mandatory = $False)]
+        [string]$StartIp = "0.0.0.0",
 
         # The ending IP address range allowed through the firewall.
-	    [Parameter(Mandatory=$False)]
-        [string]$EndIp="0.0.0.0"
+        [Parameter(Mandatory = $False)]
+        [string]$EndIp = "0.0.0.0"
     )
-    Process
-    {
+    Process {
         $envVarLoadScript = "${SecretsPath}\Load-Envs-SqlServer.ps1"
         $envVarLoadScriptBash = "${SecretsPath}\set-sql-server-environment-variables.sh"
 
-        # If env vars load file doesn't exist then we haven't created this SQL Server, if it does then we have already 
+        # If env vars load file doesn't exist then we haven't created this Resource Group and SQL Server, if it does then we have already created them.
         if (!(Test-Path $envVarLoadScript)) {
+            Write-Host "Creating Resource Group ${ResourceGroupName} in ${Location}."
+            New-AzResourceGroup -Name $ResourceGroupName -Location $Location
+
             # If we don't already have a password then create one.
             if (!(Test-Path 'env:AZURE_SQL_SERVER')) {
                 $env:AZURE_SQL_SERVER = "${ServerBaseName}-$(Get-Random)".ToLower()

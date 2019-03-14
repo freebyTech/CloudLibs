@@ -34,27 +34,25 @@ Import-Module freebyTech.AzureAD
         If it does exist the function will assume the principle was already created and the user merely 
         wants the environment variables to be loaded and a connect operation given the defined service principle.
 #>
-function New-ServicePrinciple
-{
+function New-ServicePrinciple {
     Param(
         # The service principle to create if it doesn't already exist.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$ServicePrincipleName,
 
         # The path where all secrets for this creation operation should be placed.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$SecretsPath,
 
         # Whether or not this service princicple should be secured by a new self signed cert or by a secret.
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [bool] $CertSecured,
         
         # The role to give this service principle
-        [Parameter(Mandatory=$False)]
+        [Parameter(Mandatory = $False)]
         [String] $ServiceRole = 'Contributor'
     )
-    Process
-    {
+    Process {
         $env:AZURE_SP_PFX_FILE = "${SecretsPath}\${ServicePrincipleName}.pfx"
         $env:AZURE_SP_PEM_FILE = "${SecretsPath}\${ServicePrincipleName}.pem"
         
@@ -72,7 +70,7 @@ function New-ServicePrinciple
             Write-Host "Account Tenant ID: $env:AZURE_TENANT_ID"
             Write-Host "Account Subscription ID: $env:AZURE_SUBSCRIPTION_ID"
 
-            if($CertSecured -eq $True) {
+            if ($CertSecured -eq $True) {
                 # If we don't already have a password then create one.
                 if (!(Test-Path 'env:AZURE_SP_CERT_PSWD')) {
                     Write-Host 'Generating new password'
@@ -118,11 +116,14 @@ function New-ServicePrinciple
 "@
             }
             $fileContents | Out-File -FilePath $envVarLoadScript -Encoding utf8 
+
+            Write-Host 'Allowing new service principle to propagate in the tenant for 10 seconds.'
+            Start-Sleep -Seconds 10
         }
         else {
             Write-Host "$envVarLoadScript already exists, loading settings."
             . $envVarLoadScript
-            if($CertSecured -eq $True) {
+            if ($CertSecured -eq $True) {
                 $selfSignedCertPswd = ConvertTo-SecureString -String $env:AZURE_SP_CERT_PSWD -Force -AsPlainText
             }
             else {
@@ -131,7 +132,7 @@ function New-ServicePrinciple
         }
 
         Write-Host 'Attempting to login using created service principle.'
-        if($CertSecured) {
+        if ($CertSecured) {
             Connect-WithADServicePrinciple -CertPath $env:AZURE_SP_PFX_FILE -CertPassword $selfSignedCertPswd -ApplicationId $env:AZURE_SP_APP_ID -TenantId $env:AZURE_TENANT_ID
         }
         else {

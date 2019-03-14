@@ -22,32 +22,31 @@ Import-Module freebyTech.Common
     .SYNOPSIS
         Main cluster build script.
 #>
-function New-ClusterByTerraform
-{
+function New-ClusterByTerraform {
     [OutputType([NewClusterInfo])]
     Param(
         # The name of the cluster being built.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$ClusterName,
 
         # The base path of the cluster.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$ClusterPath,
 
         # The count of agents for the cluster.
-	    [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [int]$AgentCount,
 
         # The VM sizes for each agent.
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$VmSize,
 
         # The Disk size for each agent.
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [int]$DiskSize,
 
         # The location in which to place the cluster.
-        [Parameter(Mandatory=$True)]
+        [Parameter(Mandatory = $True)]
         [string]$ClusterLocation
     )
     Process {
@@ -61,9 +60,9 @@ function New-ClusterByTerraform
 
         $clusterInfo = [NewClusterInfo]::new()
         $clusterInfo.ClusterName = $ClusterName
-        $clusterInfo.ServicePrincipleName = "$ClusterName-sp"
+        $clusterInfo.ServicePrincipleName = "$ClusterName-servp"
         $clusterInfo.ResourceGroupName = "$ClusterName-resgrp"
-        $clusterInfo.StorageAccountName = "${ClusterName}storeacct"
+        $clusterInfo.StorageAccountName = "${ClusterName}storeacct".Replace("-". "")
         $clusterInfo.TerraformStateContainerName = "$ClusterName-tfstate"
         $clusterInfo.SecretsPath = $secretsPath
 
@@ -77,12 +76,10 @@ function New-ClusterByTerraform
         $envVarLoadScriptName = "Load-Envs-$($clusterInfo.ServicePrincipleName)-terraform.ps1"
         $envVarLoadScript = "$secretsPath\$envVarLoadScriptName"
 
-        if(New-DirectoryWithTest -Path $terraformOutput)
-        {
+        if (New-DirectoryWithTest -Path $terraformOutput) {
             Write-Host "Creating base terraform files for new cluster."
             $files = Get-ChildItem $commonTerraformTemplatesPath -Filter "*.tf"
-            foreach($file in $files)
-            {
+            foreach ($file in $files) {
                 $contents = Get-Content $file.FullName
                 $newFile = "$terraformOutput\$($file.Name)"
                 Write-Host "Creating ${newFile}."
