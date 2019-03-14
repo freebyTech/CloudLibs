@@ -1,6 +1,6 @@
 # Cloud Environment and DevOps Pipeline Setup
 
-This repository demonstrates the necessary steps to setup the Azure infrastructure for a DevOps sandbox and test application with SQL Server and an external OAuth 2.0 / OpenID Connect support. All source code is represented in this repository. 
+This repository demonstrates the necessary steps to setup the Azure infrastructure for a DevOps sandbox and test application with SQL Server and an external OAuth 2.0 / OpenID Connect STS. All source code is represented in this repository minus secret definitions defined in environment variables and loaded dynamically into Kuberetes for already exsiting external resources. This is one aspect of a twelve-factor application as originally outlined by the developers at Heroku. More information about twelve-factor applications can be found here.
 
 ![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/02-Project-Architecture.PNG "Project Architecture Diagram")
 
