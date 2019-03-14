@@ -1,10 +1,12 @@
 # Cloud Environment and DevOps Pipeline Setup
 
-This document outlines the necessary steps to setup the Azure infrastructure for a DevOps sandbox and test application. All source code is represented in this repository. 
+This repository demonstrates the necessary steps to setup the Azure infrastructure for a DevOps sandbox and test application with SQL Server and an external OAuth 2.0 / OpenID Connect support. All source code is represented in this repository. 
+
+![alt text](https://github.com/freebyTech/AKS-Cluster-With-Harbor-And-Jenkins/blob/develop/documentation/02-Project-Architecture.PNG "Project Architecture Diagram")
 
 Under *cloud-ops/azure/devops-sandbox-cluster* you will find everything necessary for building out the following infrastructure in Azure:
 
-* A two node linux cluster of the size Standard_DS2_v2 that is the DevOps cluster of this project (see the next section for general information regarding standard cluster sizes that can be used with these creation scripts). Node count can also be changed easily.
+* A 3 node linux cluster of the size Standard_B2s that is the DevOps cluster of this project. See the next section for general information regarding standard cluster sizes that can be used with these creation scripts, node count can also be changed easily.
 
 Under *cloud-ops/kubernetes/devops-sandbox-cluster* you will find everything necessary for building out the following inside of that kubernetes cluster within Azure:
 
@@ -19,12 +21,12 @@ That application's source is governed by the Apache 2.0 license, see its reposit
 
 # Azure VM Pricing
 
-VMs are not the only cost related to AKS in Azure, dynamic disks and container insights logging also represent important pricing factors, but here is a breakdown of pricing per VM for standard kubernetes cluster sizes.
+VMs are not the only cost related to AKS in Azure, SQL Server instances, dynamic disks and container insights logging also represent important pricing factors, but here is a breakdown of pricing per VM for standard kubernetes cluster sizes.
 
-The following prices and sizes are based off of quotes from March of 2019, more information and different VM types can be viewed on Microsoft's website at https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/.
+The following prices and sizes are based off of quotes from March of 2019 from the East US region, more information and different VM types can be viewed on Microsoft's website at https://azure.microsoft.com/en-us/pricing/details/virtual-machines/linux/.
 
-| Size              | vCPU | Mem | Temp Storage (SSD) | Max Disks* | Monthly Cost East US  | 1 year reserved | 3 year reserved |
-|-------------------|------|-----|--------------------|------------|-----------------------|-----------------|-----------------|
+| Size              | vCPU | Mem | Temp Storage (SSD) | Max Disks* | Monthly Cost | 1 year reserved | 3 year reserved |
+|-------------------|------|-----|--------------------|------------|--------------|-----------------|-----------------|
 | Standard_B2s      | 2    | 4   | 8                  | 4          | ~$30.368/month | ~$17.7536/month (~42%) | ~$11.4464/month (~62%) |
 | Standard_DS1_v2	| 1	   | 3.5 | 7                  | 4          | ~$53.29/month | ~$22.4986/month (~58%) | ~$14.7533/month (~72%) |
 | Standard_B2ms     | 2    | 8   | 16                 | 4          | ~$60.736/month | ~$35.5802/month (~41%) | ~$22.8636/month (~62%) |
@@ -51,7 +53,7 @@ You will know you don't have it installed if your recieve this error:
 
 ```powershell
 The specified module 'Az.Accounts' was not loaded because no valid module file was found in any module directory.
-At C:\dev\screening\okta-dotnetcore-react-example\cloud-ops\azure\common\ps-modules\New-ServicePrinciple.psm1:4 char:1
+At ...\cloud-ops\azure\common\ps-modules\New-ServicePrinciple.psm1:4 char:1
 + Import-Module Az.Accounts
 + ~~~~~~~~~~~~~~~~~~~~~~~~~
 ```
@@ -80,7 +82,7 @@ Remove-Item -Force /build/terraform.zip;
 
 # Setup Azure Cloud Infrastructure 
 
-1) The cloud infrastructure can be setup by running the following command:
+1) The cloud infrastructure of kubernetes and SQL Server can be setup by running the following command:
 
 ```powershell
 cd cloud-ops/azure/devops-sandbox-cluster
@@ -96,14 +98,10 @@ cd cloud-ops/azure/devops-sandbox-cluster
 ```bash
 You will need to run the following to attach to the new cluster in bash:
 
-cd /c/dev/screening/okta-dotnetcore-react-example/cloud-ops/azure/devops-sandbox-cluster
+cd .../cloud-ops/azure/devops-sandbox-cluster
 . init-kube-connection.sh
 
-You can optionally install helm locally by running this:
-
-. $COMMON_BASH_FILES_PATH/install-helm-locally.sh
-
-To run the dashboard you can run this:
+...
 
 kubectl proxy
 
@@ -120,7 +118,7 @@ cd cloud-ops/kubernetes/devops-sandbox-cluster
 . ./02-setup-kubernetes-environment.sh
 ```
 
-2) nginx-ingress, cert-manager, the local harbor instance, and the local jenkins instance can all be setup by running the following command:
+2) The nginx-ingress, cert-manager, local harbor instances, and the local jenkins instance can all be setup by running the following command:
 
 ```powershell
 cd cloud-ops/kubernetes/devops-sandbox-cluster
