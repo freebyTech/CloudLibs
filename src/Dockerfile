@@ -15,8 +15,6 @@ RUN curl -SL "https://nodejs.org/dist/v${NODE_VERSION}/${NODE_FULL_NAME}.tar.gz"
 # install typescript and ? globally js build
 #RUN npm install -g typescript
 
-ENV BUILD_VERSION=${BUILD_VERSION}
-
 # copy csproj and restore as distinct layers so we break cache as little as possible
 COPY ./*.csproj ./sandboxapp-build-src/
 WORKDIR /app/sandboxapp-build-src
@@ -24,6 +22,9 @@ RUN dotnet restore
 
 # copy everything else and build app
 COPY ./. .
+
+ENV BUILD_VERSION=${BUILD_VERSION}
+
 RUN dotnet publish -c Release -o /app/sandboxapp-pub
 
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
