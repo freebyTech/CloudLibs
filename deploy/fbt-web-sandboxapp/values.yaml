@@ -49,7 +49,22 @@ env:
     valueFrom:
       secretKeyRef:
         name: db-env-secrets
-        key: DB__USERPASSWORD                
+        key: DB__USERPASSWORD
+  - name: OKTA_CLIENT_CONNECTIONTIMEOUT
+    valueFrom:
+      secretKeyRef:
+        name: sts-env-secrets
+        key: OKTA_CLIENT_CONNECTIONTIMEOUT
+  - name: OKTA_CLIENT_OKTADOMAIN
+    valueFrom:
+      secretKeyRef:
+        name: sts-env-secrets
+        key: OKTA_CLIENT_OKTADOMAIN
+  - name: OKTA_CLIENT_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: sts-env-secrets
+        key: OKTA_CLIENT_TOKEN                
 #nameOverride: ""
 #fullnameOverride: ""
 

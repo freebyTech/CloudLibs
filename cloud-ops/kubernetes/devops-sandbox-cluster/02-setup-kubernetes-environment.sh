@@ -94,4 +94,4 @@ kubectl create secret generic db-env-secrets -n production \
 kubectl create secret generic sts-env-secrets -n production \
     --from-literal=OKTA_CLIENT_CONNECTIONTIMEOUT=$OKTA_CLIENT_CONNECTIONTIMEOUT \
     --from-literal=OKTA_CLIENT_OKTADOMAIN=$OKTA_CLIENT_OKTADOMAIN \
-    --from-literal=OKTA_CLIENT_OKTADOMAIN=$OKTA_CLIENT_OKTADOMAIN
+    --from-literal=OKTA_CLIENT_TOKEN=$OKTA_CLIENT_TOKEN
