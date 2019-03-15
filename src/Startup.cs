@@ -19,6 +19,7 @@ using okta_dotnetcore_react_example.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
+using Serilog;
 
 namespace okta_dotnetcore_react_example
 {
@@ -57,7 +58,9 @@ namespace okta_dotnetcore_react_example
         {
             TelemetryConfiguration.Active.TelemetryInitializers.Add(new ContextInitializer(ApplicationInfo.Name));
 
-            var otkaSTS = Program.Configuration.GetValue("OKTA_CLIENT_OKTADOMAIN", "https://dev-541900.okta.com/");
+            var otkaSTS = Program.Configuration.GetValue("OKTA_CLIENT_OKTADOMAIN", "");
+            Log.Information($"STS Operations will be going against {otkaSTS}");
+
             services.AddAuthentication(sharedOptions =>
             {
                 sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -92,6 +95,8 @@ namespace okta_dotnetcore_react_example
 
             var sp = services.BuildServiceProvider();
             var dbOptions = sp.GetService<IOptions<DbOptions>>();
+
+            Log.Information($"DB Operations will be going against {dbOptions.Value.ServerName}");
 
             var dbConnectionString = DbOptions.BuildConnectionString(dbOptions.Value.ServerName, dbOptions.Value.UserName, dbOptions.Value.UserPassword, "ConferenceDb");
             services.AddDbContext<ApiContext>(options => options.UseSqlServer(dbConnectionString));
