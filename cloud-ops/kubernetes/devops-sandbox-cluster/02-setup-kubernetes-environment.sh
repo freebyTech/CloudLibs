@@ -90,3 +90,8 @@ kubectl create secret generic db-env-secrets -n production \
     --from-literal=DB__USERNAME=$AZURE_SQL_SERVER_ADMIN_USER \
     --from-literal=DB__USERPASSWORD=$AZURE_SQL_SERVER_ADMIN_PASSWORD
 
+# Setup standard db secrets for use by multiple apps.
+kubectl create secret generic sts-env-secrets -n production \
+    --from-literal=OKTA_CLIENT_CONNECTIONTIMEOUT=$OKTA_CLIENT_CONNECTIONTIMEOUT \
+    --from-literal=OKTA_CLIENT_OKTADOMAIN=$OKTA_CLIENT_OKTADOMAIN \
+    --from-literal=OKTA_CLIENT_OKTADOMAIN=$OKTA_CLIENT_OKTADOMAIN

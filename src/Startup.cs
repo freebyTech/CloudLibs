@@ -27,6 +27,7 @@ namespace okta_dotnetcore_react_example
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var otkaSTS = Configuration.GetValue("OKTA_CLIENT_OKTADOMAIN", "https://dev-541900.okta.com/");
             services.AddAuthentication(sharedOptions =>
             {
                 sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -34,8 +35,7 @@ namespace okta_dotnetcore_react_example
             })
             .AddJwtBearer(options =>
             {
-                // TODO: Really need to come from environment variables like mail and DB, to be twelve-factor.
-                options.Authority = "https://dev-541900.okta.com/oauth2/default";
+                options.Authority = $"{otkaSTS}oauth2/default";
                 options.Audience = "api://default";
             });
             services.AddMvc();
