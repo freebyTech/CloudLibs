@@ -86,16 +86,16 @@ function New-SqlServerAndAdminUser {
             Write-Host "Writing new Env loading script file: $envVarLoadScript"
             $fileContents = @"
 # SQL Server Info
-`$env:AZURE_SQL_SERVER= '$env:AZURE_SQL_SERVER'
+`$env:AZURE_SQL_SERVER= '$env:AZURE_SQL_SERVER.database.windows.net'
 `$env:AZURE_SQL_SERVER_ADMIN_USER= '$env:AZURE_SQL_SERVER_ADMIN_USER'
 `$env:AZURE_SQL_SERVER_ADMIN_PASSWORD= '$env:AZURE_SQL_SERVER_ADMIN_PASSWORD'
 "@
             $fileContents | Out-File -FilePath $envVarLoadScript -Encoding utf8 
 
             $fileContents = @"
-export AZURE_SQL_SERVER=$env:AZURE_SQL_SERVER
-export AZURE_SQL_SERVER_ADMIN_USER=$env:AZURE_SQL_SERVER_ADMIN_USER
-export AZURE_SQL_SERVER_ADMIN_PASSWORD=$env:AZURE_SQL_SERVER_ADMIN_PASSWORD
+export AZURE_SQL_SERVER='$env:AZURE_SQL_SERVER.database.windows.net'
+export AZURE_SQL_SERVER_ADMIN_USER='$env:AZURE_SQL_SERVER_ADMIN_USER'
+export AZURE_SQL_SERVER_ADMIN_PASSWORD='$env:AZURE_SQL_SERVER_ADMIN_PASSWORD'
 "@
             Remove-Item $envVarLoadScriptBash -ErrorAction SilentlyContinue
 
