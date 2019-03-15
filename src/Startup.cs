@@ -118,6 +118,8 @@ namespace okta_dotnetcore_react_example
 
             app.UseAuthentication();
 
+            app.UseStandardApiMiddleware();
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
 
