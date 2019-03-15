@@ -56,7 +56,7 @@ namespace okta_dotnetcore_react_example
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            TelemetryConfiguration.Active.TelemetryInitializers.Add(new ContextInitializer(ApplicationInfo.Name));
+            // TelemetryConfiguration.Active.TelemetryInitializers.Add(new ContextInitializer(ApplicationInfo.Name));
 
             var otkaSTS = Program.Configuration.GetValue("OKTA_CLIENT_OKTADOMAIN", "");
             Log.Information($"STS Operations will be going against {otkaSTS}");
@@ -81,11 +81,11 @@ namespace okta_dotnetcore_react_example
             });
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc(ApiVersion, new Info { Title = ApplicationInfo.Name, Version = ApplicationInfo.Version.ToString() });
-                c.IncludeXmlComments(Path.Combine(Program.ExecutionEnvironment.ServiceRootPath, $"{ApplicationInfo.Name}.xml"));
-            });
+            // services.AddSwaggerGen(c =>
+            // {
+            //     c.SwaggerDoc(ApiVersion, new Info { Title = ApplicationInfo.Name, Version = ApplicationInfo.Version.ToString() });
+            //     c.IncludeXmlComments(Path.Combine(Program.ExecutionEnvironment.ServiceRootPath, $"{ApplicationInfo.Name}.xml"));
+            // });
 
             services.AddSerilogFrameworkAgent();
             services.AddApiLoggingServices(ApplicationAssembly, "freebytech-sandbox", ApiLogVerbosity.LogMinimalRequest);
@@ -126,14 +126,14 @@ namespace okta_dotnetcore_react_example
             app.UseStandardApiMiddleware();
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
+            // app.UseSwagger();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint($"/swagger/{ApiVersion}/swagger.json", ApplicationInfo.Name);
-            });
+            // // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // // specifying the Swagger JSON endpoint.
+            // app.UseSwaggerUI(c =>
+            // {
+            //     c.SwaggerEndpoint($"/swagger/{ApiVersion}/swagger.json", ApplicationInfo.Name);
+            // });
 
             app.UseMvc(routes =>
             {
