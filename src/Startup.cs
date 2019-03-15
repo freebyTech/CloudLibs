@@ -1,33 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.Webpack;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.SpaServices.Webpack;
+using freebyTech.Common.ExtensionMethods;
+using freebyTech.Common.Web.ExtensionMethods;
+using freebyTech.Common.Web.Logging.LoggerTypes;
+using Swashbuckle.AspNetCore.Swagger;
+using System.IO;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using Microsoft.ApplicationInsights.Extensibility;
+using freebyTech.Common.Web.Logging.Initializers.AppInsights;
 using okta_dotnetcore_react_example.Data;
 using okta_dotnetcore_react_example.Options;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Options;
 
 namespace okta_dotnetcore_react_example
 {
+    /// <summary>
+    /// Startup class for tivBudget.Api application.
+    /// </summary>
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        /// <summary>
+        /// Startup class constructor
+        /// </summary>
+        public Startup()
         {
-            Configuration = configuration;
+            ApplicationAssembly = Assembly.GetExecutingAssembly();
+            ApplicationInfo = ApplicationAssembly.GetName();
+            ApiVersion = $"v{ApplicationInfo.Version.Major}.{ApplicationInfo.Version.Minor}";
         }
 
-        public IConfiguration Configuration { get; }
+        /// <summary>
+        /// The Application Assembly
+        /// </summary>
+        public Assembly ApplicationAssembly { get; }
+
+        /// <summary>
+        /// The AssemblyName of the Application
+        /// </summary>
+        public AssemblyName ApplicationInfo { get; private set; }
+
+        /// <summary>
+        /// The ApiVersion as defined for Swagger display
+        /// </summary>
+        public string ApiVersion { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var otkaSTS = Configuration.GetValue("OKTA_CLIENT_OKTADOMAIN", "https://dev-541900.okta.com/");
+            TelemetryConfiguration.Active.TelemetryInitializers.Add(new ContextInitializer(ApplicationInfo.Name));
+
+            var otkaSTS = Program.Configuration.GetValue("OKTA_CLIENT_OKTADOMAIN", "https://dev-541900.okta.com/");
             services.AddAuthentication(sharedOptions =>
             {
                 sharedOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -38,10 +68,27 @@ namespace okta_dotnetcore_react_example
                 options.Authority = $"{otkaSTS}oauth2/default";
                 options.Audience = "api://default";
             });
-            services.AddMvc();
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+            .AddJsonOptions(options =>
+            {
+                // Stop parent child reference issues with entities.
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            });
+
+            // Register the Swagger generator, defining 1 or more Swagger documents
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc(ApiVersion, new Info { Title = ApplicationInfo.Name, Version = ApplicationInfo.Version.ToString() });
+                c.IncludeXmlComments(Path.Combine(Program.ExecutionEnvironment.ServiceRootPath, $"{ApplicationInfo.Name}.xml"));
+            });
+
+            services.AddSerilogFrameworkAgent();
+            services.AddApiLoggingServices(ApplicationAssembly, "freebytech-sandbox", ApiLogVerbosity.LogMinimalRequest);
 
             // Build out DB Connection string.
-            services.Configure<DbOptions>(Configuration.GetSection("DB"));
+            services.Configure<DbOptions>(Program.Configuration.GetSection("DB"));
 
             var sp = services.BuildServiceProvider();
             var dbOptions = sp.GetService<IOptions<DbOptions>>();
@@ -71,24 +118,35 @@ namespace okta_dotnetcore_react_example
 
             app.UseAuthentication();
 
+            // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), 
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint($"/swagger/{ApiVersion}/swagger.json", ApplicationInfo.Name);
+            });
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-            name: "default",
-            template: "Home/{action=Index}/{id?}");
+                name: "default",
+                template: "Home/{action=Index}/{id?}");
 
                 routes.MapRoute(
-            name: "api",
-            template: "api/{controller=Default}/{action=Index}/{id?}"
-          );
+                    name: "api",
+                    template: "api/{controller=Default}/{action=Index}/{id?}"
+                );
 
                 routes.MapSpaFallbackRoute(
-            name: "spa-fallback",
-            defaults: new
-            {
-                controller = "Home",
-                action = "Index"
-            });
+                    name: "spa-fallback",
+                    defaults: new
+                    {
+                        controller = "Home",
+                        action = "Index"
+                    }
+                );
             });
         }
     }
