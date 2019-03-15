@@ -155,6 +155,14 @@ namespace okta_dotnetcore_react_example
                     }
                 );
             });
+            InitializeDatabase(app);
+        }
+        private void InitializeDatabase(IApplicationBuilder app)
+        {
+            using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<ApiContext>().Database.Migrate();
+            }
         }
     }
 }
