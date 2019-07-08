@@ -1,6 +1,0 @@
-.secrets
-.terraform
-helm
-harbor-helm
-get_helm.sh
-out.plan
