@@ -1,6 +1,7 @@
 variable "client_id" {}
 variable "client_secret" {}
 variable "cluster_name" {}
+variable "log_analytics_workspace_name" {}
 variable "dns_prefix" {}
 variable "vm_size" {}
 variable "disk_size" {}
@@ -17,10 +18,6 @@ variable "ssh_public_key" {
 
 variable "cluster_location" {
     default = "centralus"
-}
-
-variable log_analytics_workspace_name {
-    default = "${var.cluster_name}-log-analytics"
 }
 
 # refer https://azure.microsoft.com/global-infrastructure/services/?products=monitor for log analytics available regions

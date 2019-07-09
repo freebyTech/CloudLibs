@@ -74,9 +74,9 @@ function New-ClusterByTerraform {
 
     $envVarLoadScriptName = "Load-Envs-$($clusterInfo.ServicePrincipleName)-terraform.ps1"
     $envVarLoadScript = "$secretsPath\$envVarLoadScriptName"
-
+    $mainTfFile = "$terraformOutput\main.tf"
+      
     if (New-DirectoryWithTest -Path $terraformOutput) {
-      $mainTfFile = "$terraformOutput\main.tf"
       Write-Host "Creating Main Terraform File: ${mainTfFile}."
 
       $tfTemplateContent = @"
@@ -84,8 +84,9 @@ module "build-k8s-cluster" {
     source = "../CloudLibs/terraform/azure/build-k8s-cluster"
     cluster_name = "$clusterName"
     dns_prefix = "$clusterName"
+    log_analytics_workspace_name = "${clusterName}-law"
     cluster_location = "$ClusterLocation"
-    resource_group_name= "$clusterInfo.ResourceGroupName"
+    resource_group_name= "${clusterInfo.ResourceGroupName}"
     agent_count = $AgentCount
     vm_size = "$VmSize"
     disk_size = $DiskSize
@@ -136,6 +137,9 @@ output "host" {
       $fileContents | Out-FileUtf8NoBom -FilePath $envVarLoadScript -Append
     }
 
+    Write-Host "Loading $envVarLoadScript"
+    & $envVarLoadScript | Write-Host
+    
     Write-Host "Running terraform init:"
     Set-Location $terraformOutput
     # If don't pipe to Write-Host then the "echo" statements get returned as a part of command output and we ruin
@@ -143,8 +147,6 @@ output "host" {
     # return all uncaptured output.
     & "terraform" init -backend-config="storage_account_name=$env:AZURE_SA_ACCOUNT_NAME" -backend-config="container_name=$($clusterInfo.TerraformStateContainerName)" -backend-config="access_key=$env:AZURE_SA_ACCOUNT_KEY" -backend-config="key=freebytech.$($clusterInfo.TerraformStateContainerName)" | Write-Host
     Write-Host ""
-    Write-Host "Loading $envVarLoadScript"
-    & $envVarLoadScript | Write-Host
     Write-Host "terraform plan -out out.plan"
     & "terraform" plan -out out.plan | Write-Host
     Write-Host "terraform apply out.plan"
