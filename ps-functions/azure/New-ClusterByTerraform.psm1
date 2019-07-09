@@ -87,36 +87,36 @@ module "build-k8s-cluster" {
     cluster_location = "$ClusterLocation"
     resource_group_name= "$clusterInfo.ResourceGroupName"
     agent_count = $AgentCount
-    vm_size = $VmSize
+    vm_size = "$VmSize"
     disk_size = $DiskSize
 }
 
 output "client_key" {
-    value = "${module.biuld-k8s-cluster.client_key}"
+    value = "`${module.build-k8s-cluster.client_key}"
 }
 
 output "client_certificate" {
-    value = "${module.biuld-k8s-cluster.client_certificate}"
+    value = "`${module.build-k8s-cluster.client_certificate}"
 }
 
 output "cluster_ca_certificate" {
-    value = "${module.biuld-k8s-cluster.cluster_ca_certificate}"
+    value = "`${module.build-k8s-cluster.cluster_ca_certificate}"
 }
 
 output "cluster_username" {
-    value = "${module.biuld-k8s-cluster.cluster_username}"
+    value = "`${module.build-k8s-cluster.cluster_username}"
 }
 
 output "cluster_password" {
-    value = "${module.biuld-k8s-cluster.cluster_password}"
+    value = "`${module.build-k8s-cluster.cluster_password}"
 }
 
 output "kube_config" {
-    value = "${module.biuld-k8s-cluster.kube_config}"
+    value = "${module.build-k8s-cluster.kube_config}"
 }
 
 output "host" {
-    value = "${module.biuld-k8s-cluster.host}"
+    value = "${module.build-k8s-cluster.host}"
 }
 "@
       $tfTemplateContent | Out-FileUtf8NoBom -FilePath $mainTfFile -Append
