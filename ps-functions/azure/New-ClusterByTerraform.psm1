@@ -160,9 +160,7 @@ output "host" {
     & "terraform" apply out.plan | Write-Host
 
     $clusterPathBash = Convert-ToLinuxPath $ClusterPath
-    $commonFilesPathBash = Convert-ToLinuxPath (Resolve-Path -Path "$ClusterPath\..\common").Path
-    $commonBashFilesPathBase = "${commonFilesPathBash}/bash-files"
-
+    
     $initKubeFileName = 'init-kube-connection.sh'
     $fileContents = @"
 cd $($terraformOutput.Replace('\', '/'))
@@ -170,8 +168,6 @@ echo `"`$(terraform output kube_config)`" > ../.secrets/kube_config
 export KUBECONFIG=$clusterPathBash/.secrets/kube_config
 export CLUSTER_NAME=$ClusterName
 export CLUSTER_FILES_PATH=$clusterPathBash
-export COMMON_FILES_PATH=$commonFilesPathBash
-export COMMON_BASH_FILES_PATH=$commonBashFilesPathBase
 cd $clusterPathBash
 "@
 
@@ -184,10 +180,6 @@ cd $clusterPathBash
     Write-Host ''
     Write-Host "cd $clusterPathBash"
     write-Host ". $initKubeFileName"
-    Write-Host ''
-    Write-Host 'You can optionally install helm locally by running this:'
-    Write-Host ''
-    Write-Host '. $COMMON_BASH_FILES_PATH/install-helm-locally.sh'
     Write-Host ''
     Write-Host 'To run the dashboard you can run this:'
     Write-Host ''
