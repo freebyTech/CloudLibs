@@ -112,11 +112,11 @@ output "cluster_password" {
 }
 
 output "kube_config" {
-    value = "${module.build-k8s-cluster.kube_config}"
+    value = "`${module.build-k8s-cluster.kube_config}"
 }
 
 output "host" {
-    value = "${module.build-k8s-cluster.host}"
+    value = "`${module.build-k8s-cluster.host}"
 }
 "@
       $tfTemplateContent | Out-FileUtf8NoBom -FilePath $mainTfFile -Append
