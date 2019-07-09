@@ -81,7 +81,7 @@ function New-ClusterByTerraform {
 
       $tfTemplateContent = @"
 module "build-k8s-cluster" {
-    source = "../freebyTech.CloudHelpers/terraform/azure/build-k8s-cluser"
+    source = "../CloudLibs/terraform/azure/build-k8s-cluster"
     cluster_name = "$clusterName"
     dns_prefix = "$clusterName"
     cluster_location = "$ClusterLocation"
