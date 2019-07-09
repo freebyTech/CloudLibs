@@ -163,11 +163,9 @@ output "host" {
     
     $initKubeFileName = 'init-kube-connection.sh'
     $fileContents = @"
-cd $($terraformOutput.Replace('\', '/'))
-echo `"`$(terraform output kube_config)`" > ../.secrets/kube_config
-export KUBECONFIG=$clusterPathBash/.secrets/kube_config
+echo `"`$(terraform output kube_config)`" > ./.secrets/kube_config
+export KUBECONFIG=./.secrets/kube_config
 export CLUSTER_NAME=$ClusterName
-export CLUSTER_FILES_PATH=$clusterPathBash
 cd $clusterPathBash
 "@
 
