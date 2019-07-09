@@ -160,13 +160,17 @@ output "host" {
     & "terraform" apply out.plan | Write-Host
 
     $clusterPathBash = Convert-ToLinuxPath $ClusterPath
+    $terraformOutputPathLinux = Convert-ToLinuxPath $terraformOutput
     
     $initKubeFileName = 'init-kube-connection.sh'
     $fileContents = @"
-echo `"`$(terraform output kube_config)`" > ./.secrets/kube_config
-export KUBECONFIG=./.secrets/kube_config
+export DEST_PATH=`$(pwd)
+cd $terraformOutputPathLinux
+mkdir -p `$DEST_PATH/.secrets
+echo `"`$(terraform output kube_config)`" > `$DEST_PATH/.secrets/kube_config
+export KUBECONFIG=`$DEST_PATH/.secrets/kube_config
 export CLUSTER_NAME=$ClusterName
-cd $clusterPathBash
+cd `$DEST_PATH
 "@
 
     $initKubeFileFullPath = "$ClusterPath\$initKubeFileName"
