@@ -86,7 +86,7 @@ module "build-k8s-cluster" {
     dns_prefix = "$clusterName"
     log_analytics_workspace_name = "${clusterName}-law"
     cluster_location = "$ClusterLocation"
-    resource_group_name= "${clusterInfo.ResourceGroupName}"
+    resource_group_name= "$clusterInfo.ResourceGroupName"
     agent_count = $AgentCount
     vm_size = "$VmSize"
     disk_size = $DiskSize
@@ -139,7 +139,7 @@ output "host" {
 
     Write-Host "Loading $envVarLoadScript"
     & $envVarLoadScript | Write-Host
-    
+
     Write-Host "Running terraform init:"
     Set-Location $terraformOutput
     # If don't pipe to Write-Host then the "echo" statements get returned as a part of command output and we ruin
