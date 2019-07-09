@@ -79,14 +79,21 @@ function New-ClusterByTerraform {
     if (New-DirectoryWithTest -Path $terraformOutput) {
       Write-Host "Creating Main Terraform File: ${mainTfFile}."
 
+      $resGroupName = $clusterInfo.ResourceGroupName
+
       $tfTemplateContent = @"
+variable "client_id" {}
+variable "client_secret" {}
+
 module "build-k8s-cluster" {
     source = "../CloudLibs/terraform/azure/build-k8s-cluster"
+    client_id = "`${var.client_id}"
+    client_secret = "`${var.client_secret}"
     cluster_name = "$clusterName"
     dns_prefix = "$clusterName"
     log_analytics_workspace_name = "${clusterName}-law"
     cluster_location = "$ClusterLocation"
-    resource_group_name= "$clusterInfo.ResourceGroupName"
+    resource_group_name= "$resGroupName"
     agent_count = $AgentCount
     vm_size = "$VmSize"
     disk_size = $DiskSize
